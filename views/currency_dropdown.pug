@@ -3,19 +3,36 @@ head
     meta(charset='UTF-8')
     title Currency Exchange
     link(rel='stylesheet', href='/css/styles.css')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js')
 h3 Currency Exchange
 div
-    form(action='/currency_exchange' method="post")
-        label(for='currency_exchange') Currency from:
-        select(name='currency_from', id='')
-            each currency in Currency
-                option=currency
-        br
-        label(for='currency_exchange') Currency to:
-        select(name='currency_to', id='')
-            each currency in Currency
-                option=currency
-        br
-        label(for='currency_exchange') Amount:
-        input(type='number', name='amount',min="1" step="any")
-        input(type='submit', value='Submit')
+  label(for='currency_exchange') Currency from:
+  select(name='currency_from', id='currency_from', class="currency")
+      each currency in Currencies
+          option=currency
+  label(for='currency_exchange') Currency to:
+  select(name='currency_to', id='currency_to', class="currency")
+      each currency in Currencies
+          option=currency
+  label(for='currency_exchange') Amount:
+  input(type='number', name='amount',min="1",step="any" id="amount", class="currency")
+  p.converted_value
+
+script.
+      $(function(){
+         $( ".currency" ).change(function(e) {
+             e.preventDefault();
+             make_call()
+          });
+
+          function make_call() {
+            let from = $( "#currency_from" ).val();
+            let to = $( "#currency_to" ).val();
+            let amount = $( "#amount" ).val();
+            $.getJSON( `quote/${from}/${to}/${amount}`, function(data) {
+              $('.converted_value').html(data.quote_amount);
+            });
+          }
+
+
+      });
