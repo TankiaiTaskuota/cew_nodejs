@@ -21,6 +21,12 @@ class Exchange {
             else return `Currency not found: ${value}`
         };
 
+    if (this.from == this.to) {
+      Promise.resolve('Success').then(function(value) {
+        return 1;
+      });
+    }
+
     return sendApiRequest.send()
             .then((result) => {
                 const response = jsonParse(result);

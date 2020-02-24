@@ -7,7 +7,6 @@ class ApiCall {
   }
 
   send() {
-    console.log('this.url', this.url);
         return new Promise((resolve, reject) => {
             https.get(this.url, (resp) => {
 
