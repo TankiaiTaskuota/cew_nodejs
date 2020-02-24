@@ -12,6 +12,14 @@ app.set('view engine', 'pug');
 
 const Rate  = require('./modules/rate.js');
 
+const formatedResponse = (amount, rate) => {
+  return { quote_amount: roundValue(amount * rate), exchange_rate: roundValue(rate) }
+};
+
+const roundValue = value => {
+   return (Math.round(value * 100)/100).toFixed(3);
+}
+
 let cache = {};
 
 app.get("/", function (request, response) {
@@ -20,20 +28,24 @@ app.get("/", function (request, response) {
     })
 });
 
-app.get('/quote/:base_currency/:quote_currency/:base_amount', function(req, res) {
-  let from = req.params.base_currency,
-      to = req.params.quote_currency,
-      amount = req.params.base_amount;
+// app.get('/quote/:base_currency/:quote_currency/:base_amount', function(req, res) {
+//   let from = req.params.base_currency,
+//       to = req.params.quote_currency,
+//       amount = req.params.base_amount;
+//
+//   new Rate(from, to, amount, cache).getData().then((result) => {
+//     res.send(formatedResponse(amount, cache[from+to].getData().exchange_rate));
+//   });
+// });
 
-  const formatedResponse = (amount, rate) => {
-    return { quote_amount: amount * rate, exchange_rate: rate }
-  };
+app.get('/quote', function(req, res) {
+  let from = req.query.base_currency,
+      to = req.query.quote_currency,
+      amount = req.query.base_amount;
 
   new Rate(from, to, amount, cache).getData().then((result) => {
     res.send(formatedResponse(amount, cache[from+to].getData().exchange_rate));
   });
-
-
 });
 
 app.get("")

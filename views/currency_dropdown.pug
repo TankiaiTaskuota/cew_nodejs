@@ -29,7 +29,7 @@ script.
             let from = $( "#currency_from" ).val();
             let to = $( "#currency_to" ).val();
             let amount = parseInt($( "#amount" ).val() * 100);
-            $.getJSON( `quote/${from}/${to}/${amount}`, function(data) {
+            $.getJSON( `quote?base_currency=${from}&quote_currency=${to}&base_amount=${amount}`, function(data) {
               $('.converted_value').html(data.quote_amount / 100 );
             });
           }
